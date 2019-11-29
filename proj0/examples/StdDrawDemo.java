@@ -14,15 +14,17 @@ public class StdDrawDemo {
 
 	/* Draws three copies of the image in a rectangular pattern. */
 	public static void drawThree() {
-		/** Enables double buffering.
-		  * A animation technique where all drawing takes place on the offscreen canvas.
-		  * Only when you call show() does your drawing get copied from the
-		  * offscreen canvas to the onscreen canvas, where it is displayed
-		  * in the standard drawing window. */
+		/**
+		 * Enables double buffering. A animation technique where all drawing takes place
+		 * on the offscreen canvas. Only when you call show() does your drawing get
+		 * copied from the offscreen canvas to the onscreen canvas, where it is
+		 * displayed in the standard drawing window.
+		 */
 		StdDraw.enableDoubleBuffering();
 
-		/** Sets up the universe so it goes from
-		  * -100, -100 up to 100, 100 */
+		/**
+		 * Sets up the universe so it goes from -100, -100 up to 100, 100
+		 */
 		StdDraw.setScale(-100, 100);
 
 		/* Clears the drawing window. */
@@ -38,20 +40,24 @@ public class StdDrawDemo {
 		StdDraw.pause(2000);
 	}
 
-	/* Draws random copies of the image, clearing in between
-	 * drawings. */
+	/*
+	 * Draws random copies of the image, clearing in between drawings.
+	 */
 	public static void drawRandom() {
-		/** Enables double buffering.
-		  * A animation technique where all drawing takes place on the offscreen canvas.
-		  * Only when you call show() does your drawing get copied from the
-		  * offscreen canvas to the onscreen canvas, where it is displayed
-		  * in the standard drawing window. */
+		/**
+		 * Enables double buffering. A animation technique where all drawing takes place
+		 * on the offscreen canvas. Only when you call show() does your drawing get
+		 * copied from the offscreen canvas to the onscreen canvas, where it is
+		 * displayed in the standard drawing window.
+		 */
 		StdDraw.enableDoubleBuffering();
 
 		int waitTimeMilliseconds = 100;
 
-		/* Stamp 100 additional pictures in random locations,
-		 * each one coming slightly faster than the one before. */
+		/*
+		 * Stamp 100 additional pictures in random locations, each one coming slightly
+		 * faster than the one before.
+		 */
 		int count = 0;
 		while (count < 200) {
 			/* picks random x and y between -90 and 90 */
@@ -64,8 +70,10 @@ public class StdDrawDemo {
 			StdDraw.show();
 			StdDraw.pause(waitTimeMilliseconds);
 
-			/* Reduce wait time for each thing drawn, but
-			 * never wait less than 10 milliseconds. */
+			/*
+			 * Reduce wait time for each thing drawn, but never wait less than 10
+			 * milliseconds.
+			 */
 			waitTimeMilliseconds = waitTimeMilliseconds - 1;
 			if (waitTimeMilliseconds < 1) {
 				waitTimeMilliseconds = 10;
@@ -75,15 +83,18 @@ public class StdDrawDemo {
 		}
 	}
 
-	/** Stick a copy of the image in the dead center of the image,
-	  * which is position (0, 0). Slowly zoom in on the image,
-	  * then zoom back out (but faster than we zoomed in). */
+	/**
+	 * Stick a copy of the image in the dead center of the image, which is position
+	 * (0, 0). Slowly zoom in on the image, then zoom back out (but faster than we
+	 * zoomed in).
+	 */
 	public static void drawZoom() {
-		/** Enables double buffering.
-		  * A animation technique where all drawing takes place on the offscreen canvas.
-		  * Only when you call show() does your drawing get copied from the
-		  * offscreen canvas to the onscreen canvas, where it is displayed
-		  * in the standard drawing window. */
+		/**
+		 * Enables double buffering. A animation technique where all drawing takes place
+		 * on the offscreen canvas. Only when you call show() does your drawing get
+		 * copied from the offscreen canvas to the onscreen canvas, where it is
+		 * displayed in the standard drawing window.
+		 */
 		StdDraw.enableDoubleBuffering();
 
 		double size = 100;
@@ -105,10 +116,11 @@ public class StdDrawDemo {
 	}
 
 	public static void main(String[] args) {
-		/** Try commenting out some of these calls and
-		* notice the differences. */
+		/**
+		 * Try commenting out some of these calls and notice the differences.
+		 */
 		drawThree();
-		//drawRandom();
-		//drawZoom();
+		drawRandom();
+		drawZoom();
 	}
 }

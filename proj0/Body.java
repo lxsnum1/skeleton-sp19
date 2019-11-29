@@ -61,11 +61,22 @@ public class Body {
     public double calcNetForceExertedByY(Body[] b) {
         double netForceY = 0.0;
         for (Body someBody : b) {
-            if (!equals(someBody)) {
+            if (!this.equals(someBody)) {
                 netForceY += calcForceExertedByY(someBody);
             }
         }
         return netForceY;
     }
 
+    public void update(double dt, double xForce, double yForce) {
+        xxVel += xForce / mass * dt;
+        xxPos += xxVel * dt;
+        yyVel += yForce / mass * dt;
+        yyPos += yyVel * dt;
+    }
+
+    public void draw() {
+        StdDraw.picture(xxPos, yyPos, "./images/" + imgFileName);
+        StdDraw.show();
+    }
 }
