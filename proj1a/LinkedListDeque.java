@@ -3,24 +3,24 @@
  *
  * @author Lxs
  */
-public class LinkedListDeque<NodeType> {
+public class LinkedListDeque<T> {
     /**
-     * The first item (if it exists) in the deque is the sentinel.next
-     * The last item (if it exists) in the deque is the sentinel.prev
+     * The first item (if it exists) in the deque is the sentinel.next The last item
+     * (if it exists) in the deque is the sentinel.prev
      */
     private DequeNode sentinel;
     private int size;
 
     private class DequeNode {
-        private NodeType item;
+        private T item;
         private DequeNode prev;
         private DequeNode next;
 
         DequeNode() {
         }
 
-        DequeNode(NodeType item, DequeNode p, DequeNode n) {
-            item = item;
+        DequeNode(T x, DequeNode p, DequeNode n) {
+            item = x;
             prev = p;
             next = n;
         }
@@ -36,38 +36,50 @@ public class LinkedListDeque<NodeType> {
         sentinel.prev = sentinel;
     }
 
+    /**
+     * Creates a deep copy of other
+     */
+    public LinkedListDeque(LinkedListDeque other) {
+        sentinel = new DequeNode();
+        sentinel.next = sentinel;
+        sentinel.next = sentinel;
 
-    public void addFirst(NodeType item) {
+        for (int i = 0; i < other.size(); i++) {
+            addLast((T) other.get(i));
+        }
+    }
+
+    public void addFirst(T item) {
         size += 1;
         DequeNode newNode = new DequeNode(item, sentinel, sentinel.next);
         sentinel.next.prev = newNode;
         sentinel.next = newNode;
     }
 
-    public void addLast(NodeType item) {
+    public void addLast(T item) {
         size += 1;
         DequeNode newNode = new DequeNode(item, sentinel.prev, sentinel);
         sentinel.prev.next = newNode;
         sentinel.prev = newNode;
     }
 
-    public NodeType removeFirst() {
+    public T removeFirst() {
         if (isEmpty()) {
             return null;
         }
         size -= 1;
-        NodeType toRemove = sentinel.next.item;
+        T toRemove = sentinel.next.item;
         sentinel.next = sentinel.next.next;
         sentinel.next.prev = sentinel;
         return toRemove;
     }
 
-    public NodeType removeLast() {
+    public T removeLast() {
         if (isEmpty()) {
             return null;
         }
         size -= 1;
-        NodeType toRemove = sentinel.prev.item;
+        T toRemove = sentinel.prev.item;
         sentinel.prev = sentinel.prev.prev;
         sentinel.prev.next = sentinel;
         return toRemove;
@@ -90,12 +102,11 @@ public class LinkedListDeque<NodeType> {
         System.out.print('\n');
     }
 
-
     /**
-     * Gets the item at the given index, where 0 is the front, 1 is the next item, and so forth.
-     * If no such item exists, returns null.
+     * Gets the item at the given index, where 0 is the front, 1 is the next item,
+     * and so forth. If no such item exists, returns null.
      */
-    public NodeType get(int index) {
+    public T get(int index) {
         DequeNode toGet = sentinel.next;
         for (int i = 0; i < index; i++) {
             toGet = toGet.next;
@@ -103,33 +114,17 @@ public class LinkedListDeque<NodeType> {
         return toGet.item;
     }
 
-
     /**
-     * Same as get, but uses recursion
-     * First, need a private helper method
+     * Same as get, but uses recursion First, need a private helper method
      */
-    public NodeType getRecursive(int index) {
+    public T getRecursive(int index) {
         return getRecursive(index, sentinel.next);
     }
 
-    private NodeType getRecursive(int index, DequeNode curr) {
+    private T getRecursive(int index, DequeNode curr) {
         if (index == 0) {
             return curr.item;
         }
         return getRecursive(index - 1, curr.next);
-    }
-
-    /**
-     * Creates a deep copy of other
-     */
-    public LinkedListDeque(LinkedListDeque other) {
-        sentinel = new DequeNode();
-        sentinel.next = sentinel;
-        sentinel.next = sentinel;
-
-        for (int i = 0; i < other.size(); i++) {
-            addLast((NodeType) other.get(i));
-        }
-
     }
 }
