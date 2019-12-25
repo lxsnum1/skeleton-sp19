@@ -1,11 +1,8 @@
 package creatures;
 
-import huglife.Creature;
-import huglife.Direction;
-import huglife.Action;
-import huglife.Occupant;
+import huglife.*;
 
-import java.awt.Color;
+import java.awt.*;
 import java.util.ArrayDeque;
 import java.util.Deque;
 import java.util.Map;
@@ -29,15 +26,31 @@ public class Plip extends Creature {
      * blue color.
      */
     private int b;
+    /**
+     * fraction of energy to retain when replicating.
+     */
+    private static final double repEnergyRetained = 0.5;
+    /**
+     * fraction of energy to bestow upon offspring.
+     */
+    private static final double repEnergyGiven = 0.5;
+
+    private static final int minEnergy = 0;
+    private static final int maxEnergy = 2;
+
+    /**
+     * probability of taking a move when plip sees any clorus.
+     */
+    private static final double moveProbability = 0.5;
 
     /**
      * creates plip with energy equal to E.
      */
     public Plip(double e) {
         super("plip");
-        r = 0;
-        g = 0;
-        b = 0;
+        r = 99;
+        g = 63;
+        b = 76;
         energy = e;
     }
 
@@ -56,14 +69,16 @@ public class Plip extends Creature {
      * linearly in between these two extremes. It's not absolutely vital
      * that you get this exactly correct.
      */
+    @Override
     public Color color() {
-        g = 63;
+        g = (int) (96 * energy + 63);
         return color(r, g, b);
     }
 
     /**
      * Do nothing with C, Plips are pacifists.
      */
+    @Override
     public void attack(Creature c) {
         // do nothing.
     }
@@ -73,16 +88,25 @@ public class Plip extends Creature {
      * to avoid the magic number warning, you'll need to make a
      * private static final variable. This is not required for this lab.
      */
+    @Override
     public void move() {
         // TODO
+        energy = energy - 0.15;
+        if (energy < minEnergy) {
+            energy = minEnergy;
+        }
     }
-
 
     /**
      * Plips gain 0.2 energy when staying due to photosynthesis.
      */
+    @Override
     public void stay() {
         // TODO
+        energy = energy + 0.2;
+        if (energy > maxEnergy) {
+            energy = maxEnergy;
+        }
     }
 
     /**
@@ -90,8 +114,12 @@ public class Plip extends Creature {
      * lost to the process. Now that's efficiency! Returns a baby
      * Plip.
      */
+    @Override
     public Plip replicate() {
-        return this;
+        double tmp = energy;
+        energy = tmp * repEnergyRetained;
+        double babyEnergy = tmp * repEnergyGiven;
+        return new Plip(babyEnergy);
     }
 
     /**
@@ -107,24 +135,34 @@ public class Plip extends Creature {
      * scoop on how Actions work. See SampleCreature.chooseAction()
      * for an example to follow.
      */
+    @Override
     public Action chooseAction(Map<Direction, Occupant> neighbors) {
         // Rule 1
         Deque<Direction> emptyNeighbors = new ArrayDeque<>();
         boolean anyClorus = false;
-        // TODO
-        // (Google: Enhanced for-loop over keys of NEIGHBORS?)
-        // for () {...}
 
-        if (false) { // FIXME
-            // TODO
+        for (Direction dir : neighbors.keySet()) {
+            Occupant occ = neighbors.get(dir);
+            if (occ.name().equals("empty")) {
+                emptyNeighbors.addLast(dir);
+            } else if (occ.name().equals("clorus")) {
+                anyClorus = true;
+            }
         }
 
-        // Rule 2
-        // HINT: randomEntry(emptyNeighbors)
-
-        // Rule 3
-
-        // Rule 4
-        return new Action(Action.ActionType.STAY);
+        int emptyNum = emptyNeighbors.size();
+        if (emptyNum == 0) {
+            return new Action(Action.ActionType.STAY);
+        } else if (energy > 1) {
+            return new Action(Action.ActionType.REPLICATE, HugLifeUtils.randomEntry(emptyNeighbors));
+        } else if (anyClorus) {
+            if (HugLifeUtils.random() < moveProbability) {
+                return new Action(Action.ActionType.MOVE, HugLifeUtils.randomEntry(emptyNeighbors));
+            } else {
+                return new Action(Action.ActionType.STAY);
+            }
+        } else {
+            return new Action(Action.ActionType.STAY);
+        }
     }
 }

@@ -7,7 +7,6 @@ package huglife;
 
 import java.util.Deque;
 import java.util.Random;
-import java.util.List;
 import java.util.Stack;
 
 
@@ -25,8 +24,9 @@ public class HugLifeUtils {
     /** Returns a random number uniformly between min and max inclusive
      Stolen from: http://stackoverflow.com/questions/363681 */
     public static int randomInt(int min, int max) {
-        if (r == null)
+        if (r == null) {
             r = new Random();
+        }
 
         return r.nextInt((max - min) + 1) + min;
     }
