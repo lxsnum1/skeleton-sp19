@@ -84,13 +84,12 @@ public class Plip extends Creature {
     }
 
     /**
-     * Plips should lose 0.15 units of energy when moving. If you want to
-     * to avoid the magic number warning, you'll need to make a
-     * private static final variable. This is not required for this lab.
+     * Plips should lose 0.15 units of energy when moving. If you want to to avoid
+     * the magic number warning, you'll need to make a private static final
+     * variable. This is not required for this lab.
      */
     @Override
     public void move() {
-        // TODO
         energy = energy - 0.15;
         if (energy < minEnergy) {
             energy = minEnergy;
@@ -102,7 +101,6 @@ public class Plip extends Creature {
      */
     @Override
     public void stay() {
-        // TODO
         energy = energy + 0.2;
         if (energy > maxEnergy) {
             energy = maxEnergy;
@@ -110,9 +108,8 @@ public class Plip extends Creature {
     }
 
     /**
-     * Plips and their offspring each get 50% of the energy, with none
-     * lost to the process. Now that's efficiency! Returns a baby
-     * Plip.
+     * Plips and their offspring each get 50% of the energy, with none lost to the
+     * process. Now that's efficiency! Returns a baby Plip.
      */
     @Override
     public Plip replicate() {
@@ -125,33 +122,27 @@ public class Plip extends Creature {
     /**
      * Plips take exactly the following actions based on NEIGHBORS:
      * 1. If no empty adjacent spaces, STAY.
-     * 2. Otherwise, if energy >= 1, REPLICATE towards an empty direction
-     * chosen at random.
-     * 3. Otherwise, if any Cloruses, MOVE with 50% probability,
-     * towards an empty direction chosen at random.
+     * 2. Otherwise, if energy >= 1, REPLICATE towards an  empty direction chosen at random.
+     * 3. Otherwise, if any Cloruses, MOVE with  50% probability, towards an empty direction chosen at random.
      * 4. Otherwise, if nothing else, STAY
-     * <p>
-     * Returns an object of type Action. See Action.java for the
-     * scoop on how Actions work. See SampleCreature.chooseAction()
-     * for an example to follow.
+     * Returns an object of type Action. See Action.java for the scoop on how
+     * Actions work. See SampleCreature.chooseAction() for an example to follow.
      */
     @Override
     public Action chooseAction(Map<Direction, Occupant> neighbors) {
-        // Rule 1
         Deque<Direction> emptyNeighbors = new ArrayDeque<>();
         boolean anyClorus = false;
 
         for (Direction dir : neighbors.keySet()) {
             Occupant occ = neighbors.get(dir);
-            if (occ.name().equals("empty")) {
+            if ("empty".equals(occ.name())) {
                 emptyNeighbors.addLast(dir);
-            } else if (occ.name().equals("clorus")) {
+            } else if ("clorus".equals(occ.name())) {
                 anyClorus = true;
             }
         }
 
-        int emptyNum = emptyNeighbors.size();
-        if (emptyNum == 0) {
+        if (emptyNeighbors.size() == 0) {
             return new Action(Action.ActionType.STAY);
         } else if (energy > 1) {
             return new Action(Action.ActionType.REPLICATE, HugLifeUtils.randomEntry(emptyNeighbors));

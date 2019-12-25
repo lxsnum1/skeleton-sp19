@@ -1,7 +1,8 @@
 package huglife;
 
-import java.awt.*;
+import java.awt.Color;
 import java.util.Map;
+import java.util.List;
 
 /**
  * Example of a creature you might create for your world.
@@ -40,15 +41,16 @@ public class SampleCreature extends Creature {
     /**
      * degree of color shift to allow.
      */
-    private static int colorShift = 5;
+    private int colorShift = 5;
     /**
      * fraction of energy to retain when replicating.
      */
-    private static double repEnergyRetained = 0.3;
+    private double repEnergyRetained = 0.3;
     /**
      * fraction of energy to bestow upon offspring.
      */
-    private static double repEnergyGiven = 0.65;
+    private double repEnergyGiven = 0.65;
+
 
     /**
      * Creates a sample creature with energy E. This
@@ -71,7 +73,6 @@ public class SampleCreature extends Creature {
      * Uses method from Occupant to return a color based on personal.
      * r, g, b values
      */
-    @Override
     public Color color() {
         return color(r, g, b);
     }
@@ -140,9 +141,9 @@ public class SampleCreature extends Creature {
      * SampleCreature.
      */
     public SampleCreature replicate() {
-        double tmp = energy;
-        energy = tmp * repEnergyRetained;
-        double babyEnergy = tmp * repEnergyGiven;
+        energy = energy * repEnergyRetained;
+        double babyEnergy = energy * repEnergyGiven;
         return new SampleCreature(babyEnergy);
     }
+
 }
