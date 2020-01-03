@@ -2,17 +2,19 @@ package es.datastructur.synthesizer;
 
 /* Imports the required audio library from the
  * edu.princeton.cs.introcs package. */
-import edu.princeton.cs.introcs.StdAudio;
 
+import edu.princeton.cs.introcs.StdAudio;
 import org.junit.Test;
+
 import static org.junit.Assert.*;
 
-/** Tests the GuitarString class.
- *  @author Josh Hug
+/**
+ * Tests the GuitarString class.
+ *
+ * @author Josh Hug
  */
-
 public class TestGuitarString {
-/*    @Test
+    @Test
     public void testPluckTheAString() {
         double CONCERT_A = 440.0;
         GuitarString aString = new GuitarString(CONCERT_A);
@@ -21,9 +23,8 @@ public class TestGuitarString {
             StdAudio.play(aString.sample());
             aString.tic();
         }
-    }*/
+    }
 
-/*
     @Test
     public void testTic() {
         // Create a GuitarString of frequency 11025, which
@@ -50,7 +51,5 @@ public class TestGuitarString {
         // See JUnit documentation for a description of how tolerances work
         // for assertEquals(double, double)
         assertEquals(expected, s5, 0.001);
-
     }
-*/
 }

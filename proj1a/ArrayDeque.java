@@ -1,6 +1,5 @@
 /**
- * array deque
- * based on circular array list
+ * array deque based on circular array list
  *
  * @author Lxs
  */
@@ -23,16 +22,15 @@ public class ArrayDeque<T> {
     }
 
     public ArrayDeque(ArrayDeque other) {
-        new ArrayDeque();
+        this();
         for (int i = 0; i < other.size; i++) {
             addLast((T) other.get(i));
         }
     }
 
     /**
-     * Get the item at the given index, where 0 is the front,
-     * 1 is the next item, and so forth. If no such item exists,
-     * returns null. Must not alter the deque.
+     * Get the item at the given index, where 0 is the front, 1 is the next item,
+     * and so forth. If no such item exists, returns null. Must not alter the deque.
      */
     public void printDeque() {
         for (int i = plusOne(nextFirst); i != nextLast; i = plusOne(i)) {
@@ -41,12 +39,12 @@ public class ArrayDeque<T> {
         System.out.println();
     }
     // public void printDeque() {
-    //     int toPrint = plusOne(nextFirst);
-    //     for (int i = 0; i < size; i++) {
-    //         System.out.print(items[toPrint] + " ");
-    //         toPrint = plusOne(toPrint);
-    //     }
-    //     System.out.print('\n');
+    // int toPrint = plusOne(nextFirst);
+    // for (int i = 0; i < size; i++) {
+    // System.out.print(items[toPrint] + " ");
+    // toPrint = plusOne(toPrint);
+    // }
+    // System.out.print('\n');
     // }
 
     private boolean isFull() {
@@ -72,16 +70,15 @@ public class ArrayDeque<T> {
      * index change by minus one circular
      */
     private int minusOne(int index) {
-        // unlike Python, in Java, the % symbol represents "remainder" rather than "modulus",
+        // unlike Python, in Java, the % symbol represents "remainder" rather than
+        // "modulus",
         // therefore, it may give negative value, so + items.length is necessary,
         // or to use Math.floorMod(x, y)
         return (index - 1 + items.length) % items.length;
     }
 
     /**
-     * resize the array
-     * if full, capacity * 2
-     * if sparse, capacity / 2
+     * resize the array if full, capacity * 2 if sparse, capacity / 2
      */
     private void resize(int capacity) {
         T[] newDeque = (T[]) new Object[capacity];
@@ -102,15 +99,17 @@ public class ArrayDeque<T> {
     }
 
     // private void resize(int capacity) {
-    //     T[] newDeque = (T[]) new Object[capacity];
-    //     int oldIndex = plusOne(nextFirst); // the index of the first item in original deque
-    //     for (int newIndex = 0; newIndex < size; newIndex++) {
-    //         newDeque[newIndex] = items[oldIndex];
-    //         oldIndex = plusOne(oldIndex);
-    //     }
-    //     items = newDeque;
-    //     nextFirst = capacity - 1; // since the new deque is starting from true 0 index.
-    //     nextLast = size;
+    // T[] newDeque = (T[]) new Object[capacity];
+    // // the index of the first item in original deque
+    // int oldIndex = plusOne(nextFirst);
+    // for (int newIndex = 0; newIndex < size; newIndex++) {
+    // newDeque[newIndex] = items[oldIndex];
+    // oldIndex = plusOne(oldIndex);
+    // }
+    // items = newDeque;
+    // // since the new deque is starting from true 0 index.
+    // nextFirst = capacity - 1;
+    // nextLast = size;
     // }
 
     public void addFirst(T item) {
@@ -164,9 +163,9 @@ public class ArrayDeque<T> {
     }
 
     /**
-     * Gets the item at the given index, where 0 is the front, 1 is the next item, and so forth.
-     * If no such item exists, returns null.
-     * Must not alter the deque and must take constant time.
+     * Gets the item at the given index, where 0 is the front, 1 is the next item,
+     * and so forth. If no such item exists, returns null. Must not alter the deque
+     * and must take constant time.
      */
     public T get(int index) {
         if (index >= size) {
