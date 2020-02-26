@@ -12,7 +12,7 @@ public class MyTrieSet implements TrieSet61B {
 
     private TrieNode root;
 
-    private class TrieNode {
+    private static class TrieNode {
         boolean isKey;
         Map<Character, TrieNode> children;
 

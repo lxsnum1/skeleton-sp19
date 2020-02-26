@@ -4,10 +4,12 @@ package bearmaps;
  * Created by hug.
  */
 public class PrintHeapDemo {
-    /** Prints out a vey basic drawing of the given array of Objects assuming it
-     *  is a heap starting at index 1. You're welcome to copy and paste
-     *  code from this method into your code, just make sure to cite
-     *  this with the @source tag. */
+    /**
+     * Prints out a vey basic drawing of the given array of Objects assuming it
+     * is a heap starting at index 1. You're welcome to copy and paste
+     * code from this method into your code, just make sure to cite
+     * this with the @source tag.
+     */
     public static void printSimpleHeapDrawing(Object[] heap) {
         int depth = ((int) (Math.log(heap.length) / Math.log(2)));
         int level = 0;
@@ -31,10 +33,12 @@ public class PrintHeapDemo {
         System.out.println();
     }
 
-    /** Prints out a drawing of the given array of Objects assuming it
-     *  is a heap starting at index 1. You're welcome to copy and paste
-     *  code from this method into your code, just make sure to cite
-     *  this with the @source tag. */
+    /**
+     * Prints out a drawing of the given array of Objects assuming it
+     * is a heap starting at index 1. You're welcome to copy and paste
+     * code from this method into your code, just make sure to cite
+     * this with the @source tag.
+     */
     public static void printFancyHeapDrawing(Object[] items) {
         String drawing = fancyHeapDrawingHelper(items, 1, "");
         System.out.println(drawing);
@@ -60,7 +64,6 @@ public class PrintHeapDemo {
             return toReturn;
         }
     }
-
 
     public static void main(String[] args) {
         Integer[] example = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16};
