@@ -1,18 +1,20 @@
 import edu.princeton.cs.algs4.Queue;
 
+/**
+ * @author Lxs
+ */
 public class MergeSort {
     /**
      * Removes and returns the smallest item that is in q1 or q2.
+     * <p>
+     * The method assumes that both q1 and q2 are in sorted order, with the smallest
+     * item first. At most one of q1 or q2 can be empty (but both cannot be empty).
      *
-     * The method assumes that both q1 and q2 are in sorted order, with the smallest item first. At
-     * most one of q1 or q2 can be empty (but both cannot be empty).
-     *
-     * @param   q1  A Queue in sorted order from least to greatest.
-     * @param   q2  A Queue in sorted order from least to greatest.
-     * @return      The smallest item that is in q1 or q2.
+     * @param q1 A Queue in sorted order from least to greatest.
+     * @param q2 A Queue in sorted order from least to greatest.
+     * @return The smallest item that is in q1 or q2.
      */
-    private static <Item extends Comparable> Item getMin(
-            Queue<Item> q1, Queue<Item> q2) {
+    private static <Item extends Comparable> Item getMin(Queue<Item> q1, Queue<Item> q2) {
         if (q1.isEmpty()) {
             return q2.dequeue();
         } else if (q2.isEmpty()) {
@@ -33,51 +35,63 @@ public class MergeSort {
 
     /**
      * Returns a queue of queues that each contain one item from items.
-     *
+     * <p>
      * This method should take linear time.
      *
-     * @param   items  A Queue of items.
-     * @return         A Queue of queues, each containing an item from items.
-     *
+     * @param items A Queue of items.
+     * @return A Queue of queues, each containing an item from items.
      */
-    private static <Item extends Comparable> Queue<Queue<Item>>
-            makeSingleItemQueues(Queue<Item> items) {
-        // Your code here!
-        return null;
+    private static <Item extends Comparable> Queue<Queue<Item>> makeSingleItemQueues(Queue<Item> items) {
+        Queue<Queue<Item>> singleItemQueues = new Queue<>();
+
+        // shouldn't change items
+        for (Item item : items) {
+            Queue<Item> tmp = new Queue<>();
+            tmp.enqueue(item);
+            singleItemQueues.enqueue(tmp);
+        }
+        return singleItemQueues;
     }
 
     /**
      * Returns a new queue that contains the items in q1 and q2 in sorted order.
+     * <p>
+     * This method should take time linear in the total number of items in q1 and
+     * q2. After running this method, q1 and q2 will be empty, and all of their
+     * items will be in the returned queue.
      *
-     * This method should take time linear in the total number of items in q1 and q2.  After
-     * running this method, q1 and q2 will be empty, and all of their items will be in the
-     * returned queue.
-     *
-     * @param   q1  A Queue in sorted order from least to greatest.
-     * @param   q2  A Queue in sorted order from least to greatest.
-     * @return      A Queue containing all of the q1 and q2 in sorted order, from least to
-     *              greatest.
-     *
+     * @param q1 A Queue in sorted order from least to greatest.
+     * @param q2 A Queue in sorted order from least to greatest.
+     * @return A Queue containing all of the q1 and q2 in sorted order, from least
+     * to greatest.
      */
-    private static <Item extends Comparable> Queue<Item> mergeSortedQueues(
-            Queue<Item> q1, Queue<Item> q2) {
-        // Your code here!
-        return null;
+    private static <Item extends Comparable> Queue<Item> mergeSortedQueues(Queue<Item> q1, Queue<Item> q2) {
+        Queue<Item> mergedQueue = new Queue<>();
+        while (!(q1.isEmpty() && q2.isEmpty())) {
+            mergedQueue.enqueue(getMin(q1, q2));
+        }
+        return mergedQueue;
     }
 
     /**
      * Returns a Queue that contains the given items sorted from least to greatest.
-     *
+     * <p>
      * This method should take roughly nlogn time where n is the size of "items"
      * this method should be non-destructive and not empty "items".
      *
-     * @param   items  A Queue to be sorted.
-     * @return         A Queue containing every item in "items".
-     *
+     * @param items A Queue to be sorted.
+     * @return A Queue containing every item in "items".
      */
-    public static <Item extends Comparable> Queue<Item> mergeSort(
-            Queue<Item> items) {
-        // Your code here!
-        return items;
+    public static <Item extends Comparable> Queue<Item> mergeSort(Queue<Item> items) {
+
+        if (items.size() <= 1) {
+            return items;
+        }
+
+        Queue<Queue<Item>> q = makeSingleItemQueues(items);
+        while (q.size() > 1) {
+            q.enqueue(mergeSortedQueues(q.dequeue(), q.dequeue()));
+        }
+        return q.peek();
     }
 }
