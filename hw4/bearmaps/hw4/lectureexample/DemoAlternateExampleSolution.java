@@ -1,9 +1,9 @@
 package bearmaps.hw4.lectureexample;
 
+import bearmaps.hw4.AStarSolver;
 import bearmaps.hw4.LazySolver;
 import bearmaps.hw4.ShortestPathsSolver;
 import bearmaps.hw4.SolutionPrinter;
-
 
 /**
  * Showcases how the AStarSolver can solve the example from the spec.
@@ -26,11 +26,10 @@ public class DemoAlternateExampleSolution {
         wdg.addEdge(4, 3, 10);
         wdg.addEdge(4, 5, 100);
 
-
         int start = 0;
         int goal = 5;
 
-        ShortestPathsSolver<Integer> solver = new LazySolver<>(wdg, start, goal, 10);
+        ShortestPathsSolver<Integer> solver = new AStarSolver<>(wdg, start, goal, 10);
         SolutionPrinter.summarizeSolution(solver, " => ");
     }
 }

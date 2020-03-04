@@ -11,7 +11,7 @@ import java.util.List;
  * Created by hug.
  */
 public class WeightedDirectedGraph implements AStarGraph<Integer> {
-    /* Represents the list of edges from a single vertex. */
+    /** Represents the list of edges from a single vertex. */
     private class EdgeList {
         private List<WeightedEdge<Integer>> list;
         private EdgeList() {
@@ -33,7 +33,7 @@ public class WeightedDirectedGraph implements AStarGraph<Integer> {
         return adj[v].list;
     }
 
-    /* Very crude heuristic that just returns the weight
+    /** Very crude heuristic that just returns the weight
        of the smallest edge out of vertex s.
      */
     @Override
