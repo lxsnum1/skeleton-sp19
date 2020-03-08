@@ -21,32 +21,30 @@ import static bearmaps.proj2c.utils.Constants.SEMANTIC_STREET_GRAPH;
 import static bearmaps.proj2c.utils.Constants.ROUTE_LIST;
 
 /**
- * Handles requests from the web browser for map images. These images will be
- * rastered into one large image to be displayed to the user.
- * 
+ * Handles requests from the web browser for map images. These images
+ * will be rastered into one large image to be displayed to the user.
  * @author rahul, Josh Hug, _________
  */
 public class RasterAPIHandler extends APIRouteHandler<Map<String, Double>, Map<String, Object>> {
 
     /**
-     * Each raster request to the server will have the following parameters as keys
-     * in the params map accessible by, i.e., params.get("ullat") inside
-     * RasterAPIHandler.processRequest(). <br>
-     * ullat : upper left corner latitude, <br>
-     * ullon : upper left corner longitude, <br>
-     * lrlat : lower right corner latitude,<br>
-     * lrlon : lower right corner longitude <br>
-     * w : user viewport window width in pixels,<br>
-     * h : user viewport height in pixels.
+     * Each raster request to the server will have the following parameters
+     * as keys in the params map accessible by,
+     * i.e., params.get("ullat") inside RasterAPIHandler.processRequest(). <br>
+     * ullat : upper left corner latitude, <br> ullon : upper left corner longitude, <br>
+     * lrlat : lower right corner latitude,<br> lrlon : lower right corner longitude <br>
+     * w : user viewport window width in pixels,<br> h : user viewport height in pixels.
      **/
-    private static final String[] REQUIRED_RASTER_REQUEST_PARAMS = { "ullat", "ullon", "lrlat", "lrlon", "w", "h" };
+    private static final String[] REQUIRED_RASTER_REQUEST_PARAMS = {"ullat", "ullon", "lrlat",
+            "lrlon", "w", "h"};
 
     /**
-     * The result of rastering must be a map containing all of the fields listed in
-     * the comments for RasterAPIHandler.processRequest.
+     * The result of rastering must be a map containing all of the
+     * fields listed in the comments for RasterAPIHandler.processRequest.
      **/
-    private static final String[] REQUIRED_RASTER_RESULT_PARAMS = { "render_grid", "raster_ul_lon", "raster_ul_lat",
-            "raster_lr_lon", "raster_lr_lat", "depth", "query_success" };
+    private static final String[] REQUIRED_RASTER_RESULT_PARAMS = {"render_grid", "raster_ul_lon",
+            "raster_ul_lat", "raster_lr_lon", "raster_lr_lat", "depth", "query_success"};
+
 
     @Override
     protected Map<String, Double> parseRequestParams(Request request) {
@@ -54,50 +52,43 @@ public class RasterAPIHandler extends APIRouteHandler<Map<String, Double>, Map<S
     }
 
     /**
-     * Takes a user query and finds the grid of images that best matches the query.
-     * These images will be combined into one big image (rastered) by the front end.
-     * <br>
+     * Takes a user query and finds the grid of images that best matches the query. These
+     * images will be combined into one big image (rastered) by the front end. <br>
      *
-     * The grid of images must obey the following properties, where image in the
-     * grid is referred to as a "tile".
-     * <ul>
-     * <li>The tiles collected must cover the most longitudinal distance per pixel
-     * (LonDPP) possible, while still covering less than or equal to the amount of
-     * longitudinal distance per pixel in the query box for the user viewport size.
-     * </li>
-     * <li>Contains all tiles that intersect the query bounding box that fulfill the
-     * above condition.</li>
-     * <li>The tiles must be arranged in-order to reconstruct the full image.</li>
-     * </ul>
+     *     The grid of images must obey the following properties, where image in the
+     *     grid is referred to as a "tile".
+     *     <ul>
+     *         <li>The tiles collected must cover the most longitudinal distance per pixel
+     *         (LonDPP) possible, while still covering less than or equal to the amount of
+     *         longitudinal distance per pixel in the query box for the user viewport size. </li>
+     *         <li>Contains all tiles that intersect the query bounding box that fulfill the
+     *         above condition.</li>
+     *         <li>The tiles must be arranged in-order to reconstruct the full image.</li>
+     *     </ul>
      *
-     * @param requestParams Map of the HTTP GET request's query parameters - the
-     *                      query box and the user viewport width and height.
+     * @param requestParams Map of the HTTP GET request's query parameters - the query box and
+     *               the user viewport width and height.
      *
-     * @param response      : Not used by this function. You may ignore.
+     * @param response : Not used by this function. You may ignore.
      * @return A map of results for the front end as specified: <br>
-     *         "render_grid" : String[][], the files to display. <br>
-     *         "raster_ul_lon" : Number, the bounding upper left longitude of the
-     *         rastered image. <br>
-     *         "raster_ul_lat" : Number, the bounding upper left latitude of the
-     *         rastered image. <br>
-     *         "raster_lr_lon" : Number, the bounding lower right longitude of the
-     *         rastered image. <br>
-     *         "raster_lr_lat" : Number, the bounding lower right latitude of the
-     *         rastered image. <br>
-     *         "depth" : Number, the depth of the nodes of the rastered image; can
-     *         also be interpreted as the length of the numbers in the image string.
-     *         <br>
-     *         "query_success" : Boolean, whether the query was able to successfully
-     *         complete; don't forget to set this to true on success! <br>
+     * "render_grid"   : String[][], the files to display. <br>
+     * "raster_ul_lon" : Number, the bounding upper left longitude of the rastered image. <br>
+     * "raster_ul_lat" : Number, the bounding upper left latitude of the rastered image. <br>
+     * "raster_lr_lon" : Number, the bounding lower right longitude of the rastered image. <br>
+     * "raster_lr_lat" : Number, the bounding lower right latitude of the rastered image. <br>
+     * "depth"         : Number, the depth of the nodes of the rastered image;
+     *                    can also be interpreted as the length of the numbers in the image
+     *                    string. <br>
+     * "query_success" : Boolean, whether the query was able to successfully complete; don't
+     *                    forget to set this to true on success! <br>
      */
     @Override
     public Map<String, Object> processRequest(Map<String, Double> requestParams, Response response) {
         System.out.println("yo, wanna know the parameters given by the web browser? They are:");
         System.out.println(requestParams);
         Map<String, Object> results = new HashMap<>();
-        // System.out.println("Since you haven't implemented
-        // RasterAPIHandler.processRequest, nothing is displayed in "
-        // + "your browser.");
+        System.out.println("Since you haven't implemented RasterAPIHandler.processRequest, nothing is displayed in "
+                + "your browser.");
         return results;
     }
 
@@ -128,7 +119,6 @@ public class RasterAPIHandler extends APIRouteHandler<Map<String, Double>, Map<S
 
     /**
      * Validates that Rasterer has returned a result that can be rendered.
-     * 
      * @param rip : Parameters provided by the rasterer
      */
     private boolean validateRasteredImgParams(Map<String, Object> rip) {
@@ -149,17 +139,18 @@ public class RasterAPIHandler extends APIRouteHandler<Map<String, Double>, Map<S
     }
 
     /**
-     * Writes the images corresponding to rasteredImgParams to the output stream. In
-     * Spring 2016, students had to do this on their own, but in 2017, we made this
-     * into provided code since it was just a bit too low level.
+     * Writes the images corresponding to rasteredImgParams to the output stream.
+     * In Spring 2016, students had to do this on their own, but in 2017,
+     * we made this into provided code since it was just a bit too low level.
      */
-    private void writeImagesToOutputStream(Map<String, Object> rasteredImageParams, ByteArrayOutputStream os) {
+    private  void writeImagesToOutputStream(Map<String, Object> rasteredImageParams,
+                                                  ByteArrayOutputStream os) {
         String[][] renderGrid = (String[][]) rasteredImageParams.get("render_grid");
         int numVertTiles = renderGrid.length;
         int numHorizTiles = renderGrid[0].length;
 
-        BufferedImage img = new BufferedImage(numHorizTiles * Constants.TILE_SIZE, numVertTiles * Constants.TILE_SIZE,
-                BufferedImage.TYPE_INT_RGB);
+        BufferedImage img = new BufferedImage(numHorizTiles * Constants.TILE_SIZE,
+                numVertTiles * Constants.TILE_SIZE, BufferedImage.TYPE_INT_RGB);
         Graphics graphic = img.getGraphics();
         int x = 0, y = 0;
 
@@ -175,10 +166,10 @@ public class RasterAPIHandler extends APIRouteHandler<Map<String, Double>, Map<S
         }
 
         /* If there is a route, draw it. */
-        double ullon = (double) rasteredImageParams.get("raster_ul_lon"); // tiles.get(0).ulp;
-        double ullat = (double) rasteredImageParams.get("raster_ul_lat"); // tiles.get(0).ulp;
-        double lrlon = (double) rasteredImageParams.get("raster_lr_lon"); // tiles.get(0).ulp;
-        double lrlat = (double) rasteredImageParams.get("raster_lr_lat"); // tiles.get(0).ulp;
+        double ullon = (double) rasteredImageParams.get("raster_ul_lon"); //tiles.get(0).ulp;
+        double ullat = (double) rasteredImageParams.get("raster_ul_lat"); //tiles.get(0).ulp;
+        double lrlon = (double) rasteredImageParams.get("raster_lr_lon"); //tiles.get(0).ulp;
+        double lrlat = (double) rasteredImageParams.get("raster_lr_lat"); //tiles.get(0).ulp;
 
         final double wdpp = (lrlon - ullon) / img.getWidth();
         final double hdpp = (ullat - lrlat) / img.getHeight();
@@ -188,11 +179,13 @@ public class RasterAPIHandler extends APIRouteHandler<Map<String, Double>, Map<S
         if (route != null && !route.isEmpty()) {
             Graphics2D g2d = (Graphics2D) graphic;
             g2d.setColor(Constants.ROUTE_STROKE_COLOR);
-            g2d.setStroke(
-                    new BasicStroke(Constants.ROUTE_STROKE_WIDTH_PX, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND));
+            g2d.setStroke(new BasicStroke(Constants.ROUTE_STROKE_WIDTH_PX,
+                    BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND));
             route.stream().reduce((v, w) -> {
-                g2d.drawLine((int) ((graph.lon(v) - ullon) * (1 / wdpp)), (int) ((ullat - graph.lat(v)) * (1 / hdpp)),
-                        (int) ((graph.lon(w) - ullon) * (1 / wdpp)), (int) ((ullat - graph.lat(w)) * (1 / hdpp)));
+                g2d.drawLine((int) ((graph.lon(v) - ullon) * (1 / wdpp)),
+                        (int) ((ullat - graph.lat(v)) * (1 / hdpp)),
+                        (int) ((graph.lon(w) - ullon) * (1 / wdpp)),
+                        (int) ((ullat - graph.lat(w)) * (1 / hdpp)));
                 return w;
             });
         }
