@@ -2,9 +2,9 @@ package bearmaps.proj2c.server.handler.impl;
 
 import bearmaps.proj2c.AugmentedStreetMapGraph;
 import bearmaps.proj2c.server.handler.APIRouteHandler;
+import bearmaps.proj2c.utils.Constants;
 import spark.Request;
 import spark.Response;
-import bearmaps.proj2c.utils.Constants;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -17,7 +17,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static bearmaps.proj2c.utils.Constants.SEMANTIC_STREET_GRAPH;
 import static bearmaps.proj2c.utils.Constants.*;
 
 /**
@@ -39,14 +38,14 @@ public class RasterAPIHandler extends APIRouteHandler<Map<String, Double>, Map<S
      * w : user viewport window width in pixels,<br>
      * h : user viewport height in pixels.
      **/
-    private static final String[] REQUIRED_RASTER_REQUEST_PARAMS = {"ullat", "ullon", "lrlat", "lrlon", "w", "h"};
+    private static final String[] REQUIRED_RASTER_REQUEST_PARAMS = { "ullat", "ullon", "lrlat", "lrlon", "w", "h" };
 
     /**
      * The result of rastering must be a map containing all of the fields listed in
      * the comments for RasterAPIHandler.processRequest.
      **/
-    private static final String[] REQUIRED_RASTER_RESULT_PARAMS = {"render_grid", "raster_ul_lon", "raster_ul_lat",
-            "raster_lr_lon", "raster_lr_lat", "depth", "query_success"};
+    private static final String[] REQUIRED_RASTER_RESULT_PARAMS = { "render_grid", "raster_ul_lon", "raster_ul_lat",
+            "raster_lr_lon", "raster_lr_lat", "depth", "query_success" };
 
     @Override
     protected Map<String, Double> parseRequestParams(Request request) {
@@ -74,38 +73,36 @@ public class RasterAPIHandler extends APIRouteHandler<Map<String, Double>, Map<S
      *                      query box and the user viewport width and height.
      * @param response      : Not used by this function. You may ignore.
      * @return A map of results for the front end as specified: <br>
-     * "render_grid" : String[][], the files to display. <br>
-     * "raster_ul_lon" : Number, the bounding upper left longitude of the
-     * rastered image. <br>
-     * "raster_ul_lat" : Number, the bounding upper left latitude of the
-     * rastered image. <br>
-     * "raster_lr_lon" : Number, the bounding lower right longitude of the
-     * rastered image. <br>
-     * "raster_lr_lat" : Number, the bounding lower right latitude of the
-     * rastered image. <br>
-     * "depth" : Number, the depth of the nodes of the rastered image; can
-     * also be interpreted as the length of the numbers in the image string.
-     * <br>
-     * "query_success" : Boolean, whether the query was able to successfully
-     * complete; don't forget to set this to true on success! <br>
+     *         "render_grid" : String[][], the files to display. <br>
+     *         "raster_ul_lon" : Number, the bounding upper left longitude of the
+     *         rastered image. <br>
+     *         "raster_ul_lat" : Number, the bounding upper left latitude of the
+     *         rastered image. <br>
+     *         "raster_lr_lon" : Number, the bounding lower right longitude of the
+     *         rastered image. <br>
+     *         "raster_lr_lat" : Number, the bounding lower right latitude of the
+     *         rastered image. <br>
+     *         "depth" : Number, the depth of the nodes of the rastered image; can
+     *         also be interpreted as the length of the numbers in the image string.
+     *         <br>
+     *         "query_success" : Boolean, whether the query was able to successfully
+     *         complete; don't forget to set this to true on success! <br>
      */
     @Override
     public Map<String, Object> processRequest(Map<String, Double> requestParams, Response response) {
-        // System.out.println("yo, wanna know the parameters given by the web browser?
-        // They are:");
-        // System.out.println(requestParams);
-        // System.out.println("Since you haven't implemented
-        // RasterAPIHandler.processRequest, nothing is displayed in "
-        // + "your browser.");
+        System.out.println("yo, wanna know the parameters given by the web browser? They are:");
+        System.out.println(requestParams);
+        // System.out.println(
+        // "Since you haven't implemented RasterAPIHandler.processRequest, nothing is
+        // displayed in your browser.");
 
-        Map<String, Object> results = new HashMap<>();
+        Map<String, Object> results = new HashMap<>(8);
         String[][] renderGrid;
         double rasterULLon; // upper left x
         double rasterULLat; // upper left y
         double rasterLRLon; // lower right x
         double rasterLRLat; // lower right y
         int depth;
-        boolean querySuccess = true;
 
         // Parse the request parameters.
         double requestULLon = requestParams.get("ullon");
@@ -115,18 +112,18 @@ public class RasterAPIHandler extends APIRouteHandler<Map<String, Double>, Map<S
         double requestWidth = requestParams.get("w");
         double requestHeight = requestParams.get("h");
 
-        // Request grid is completely out of the whole image.
-        if (Double.compare(requestULLon, ROOT_ULLON) > 0 || Double.compare(requestULLat, ROOT_LRLAT) < 0
-                || Double.compare(requestLRLon, ROOT_ULLON) < 0 || Double.compare(requestLRLat, ROOT_ULLAT) > 0) {
-            querySuccess = false;
+        // Query box area must be > 0
+        if (Double.compare(requestULLon, requestLRLon) >= 0 || Double.compare(requestULLat, requestLRLat) <= 0) {
+            return queryFail();
         }
 
-        // Nonsense request grid.
-        if (Double.compare(requestULLon, requestLRLon) > 0 || Double.compare(requestULLat, requestLRLat) < 0) {
-            querySuccess = false;
+        // Query box is completely out of the whole image: up, down, left, right
+        if (Double.compare(requestLRLat, ROOT_ULLAT) >= 0 || Double.compare(requestULLat, ROOT_LRLAT) <= 0
+                || Double.compare(requestLRLon, ROOT_ULLON) <= 0 || Double.compare(requestULLon, ROOT_LRLON) >= 0) {
+            return queryFail();
         }
 
-        results.put("query_success", querySuccess);
+        results.put("query_success", true);
 
         // Find the optimal depth.
         double requestLonDPP = (requestLRLon - requestULLon) / requestWidth;
@@ -134,24 +131,22 @@ public class RasterAPIHandler extends APIRouteHandler<Map<String, Double>, Map<S
         results.put("depth", depth);
 
         // Find the rastered parameters.
-        int rasterULLonNum = calcRasteredParamNum(depth, requestULLon, ROOT_ULLON, ROOT_LRLON, true);
-        rasterULLon = calcRasteredParam(depth, rasterULLonNum, ROOT_ULLON, ROOT_LRLON, true, true);
+        int rasterULLonNum = calcRasterGridNum(depth, requestULLon, ROOT_ULLON, ROOT_LRLON);
+        rasterULLon = calcRasterParam(depth, rasterULLonNum, ROOT_ULLON, ROOT_LRLON, true, true);
         results.put("raster_ul_lon", rasterULLon);
 
-        int rasterULLatNum = calcRasteredParamNum(depth, requestULLat, ROOT_ULLAT, ROOT_LRLAT, true);
-        rasterULLat = calcRasteredParam(depth, rasterULLatNum, ROOT_ULLAT, ROOT_LRLAT, true, false);
+        int rasterULLatNum = calcRasterGridNum(depth, requestULLat, ROOT_ULLAT, ROOT_LRLAT);
+        rasterULLat = calcRasterParam(depth, rasterULLatNum, ROOT_ULLAT, ROOT_LRLAT, true, false);
         results.put("raster_ul_lat", rasterULLat);
 
-        int rasterLRLonNum = calcRasteredParamNum(depth, requestLRLon, ROOT_ULLON, ROOT_LRLON, false);
-        rasterLRLon = calcRasteredParam(depth, rasterLRLonNum, ROOT_ULLON, ROOT_LRLON, false, true);
+        int rasterLRLonNum = calcRasterGridNum(depth, requestLRLon, ROOT_ULLON, ROOT_LRLON);
+        rasterLRLon = calcRasterParam(depth, rasterLRLonNum, ROOT_ULLON, ROOT_LRLON, false, true);
         results.put("raster_lr_lon", rasterLRLon);
 
-        int rasterLRLatNum = calcRasteredParamNum(depth, requestLRLat, ROOT_ULLAT, ROOT_LRLAT, false);
-        rasterLRLat = calcRasteredParam(depth, rasterLRLatNum, ROOT_ULLAT, ROOT_LRLAT, false, false);
+        int rasterLRLatNum = calcRasterGridNum(depth, requestLRLat, ROOT_ULLAT, ROOT_LRLAT);
+        rasterLRLat = calcRasterParam(depth, rasterLRLatNum, ROOT_ULLAT, ROOT_LRLAT, false, false);
         results.put("raster_lr_lat", rasterLRLat);
 
-        // Add 1 here because the LRNum is underestimated 1 in the previous
-        // calcRasteredParamNum in order to correspond to image number.
         int rowNum = rasterLRLatNum - rasterULLatNum + 1;
         int colNum = rasterLRLonNum - rasterULLonNum + 1;
         renderGrid = new String[rowNum][colNum];
@@ -171,61 +166,57 @@ public class RasterAPIHandler extends APIRouteHandler<Map<String, Double>, Map<S
     private int calcOptimalDepth(double requestLonDPP) {
         double baseLonDPP = (ROOT_LRLON - ROOT_ULLON) / TILE_SIZE;
 
-        // Take the log of base 0.5 to get the optimal depth.
         // Always round up to fulfill the LonDPP requirement.
         // Use the log change-of-base formula.
-        int optimalDepth = (int) Math.ceil((Math.log(requestLonDPP / baseLonDPP) / Math.log(0.5)));
-        if (optimalDepth < 7) {
-            return optimalDepth;
-        }
+        // requestLonDPP * 2^D = baseLonDPP
+        int optimalDepth = (int) Math.ceil((Math.log(baseLonDPP / requestLonDPP) / Math.log(2)));
 
-        // Since the deepest depth is 7.
-        return 7;
+        // the deepest depth is 7
+        return optimalDepth < 7 ? optimalDepth : 7;
     }
 
     /**
      * Calculate the corresponding grid number of the rastered parameter.
      */
-    private int calcRasteredParamNum(int depth, double requestParam, double rootUL, double rootLR, boolean isUL) {
-        int bound = (int) (Math.pow(2, depth) - 1);
+    private int calcRasterGridNum(int depth, double requestParam, double rootUL, double rootLR) {
+        int bound = (int) Math.pow(2, depth);
 
         // Calculate the specific size (width or height) of each tile in current depth.
-        double tileSize = Math.abs(rootUL - rootLR) / (bound + 1);
+        double tileSize = Math.abs(rootUL - rootLR) / bound;
 
         // Always find the difference relative to the root upper left corner.
         double temp = Math.abs(requestParam - rootUL) / tileSize;
 
         // Round down the temp, because the number of image counting from zero.
-        int rasteredParamNum = (int) Math.floor(temp);
+        int rasterGridNum = (int) Math.floor(temp);
 
-        // If num larger than the bound num, set it to bound num.
-        // If num smaller than 0, set it to 0;
-        if (rasteredParamNum > bound) {
-            rasteredParamNum = bound;
-        } else if (rasteredParamNum < 0) {
-            rasteredParamNum = 0;
+        // Partial Coverage
+        if (rasterGridNum > bound - 1) {
+            rasterGridNum = bound - 1;
+        } else if (rasterGridNum < 0) {
+            rasterGridNum = 0;
         }
 
-        return rasteredParamNum;
+        return rasterGridNum;
     }
 
     /**
      * Calculate the rastered parameter.
      */
-    private double calcRasteredParam(int depth, int rasteredParamNum, double rootUL, double rootLR, boolean isUL,
-                                     boolean isLon) {
-        int bound = (int) (Math.pow(2, depth) - 1);
+    private double calcRasterParam(int depth, int rasteredGridNum, double rootUL, double rootLR, boolean isUL,
+            boolean isLon) {
+        int bound = (int) Math.pow(2, depth);
 
         // Calculate the specific size (width or height) of each tile in current depth.
-        double tileSize = Math.abs(rootUL - rootLR) / (bound + 1);
-        double rasteredParam;
+        double tileSize = Math.abs(rootUL - rootLR) / bound;
+        double rasterParam;
 
         // Always add(minus) from the upper(left) corner's Lon or Lat.
         if (isUL) {
             if (isLon) {
-                rasteredParam = rootUL + rasteredParamNum * tileSize;
+                rasterParam = rootUL + rasteredGridNum * tileSize;
             } else {
-                rasteredParam = rootUL - rasteredParamNum * tileSize;
+                rasterParam = rootUL - rasteredGridNum * tileSize;
             }
 
             // If calculate lower right coordinates, the rasteredParamNum
@@ -233,13 +224,25 @@ public class RasterAPIHandler extends APIRouteHandler<Map<String, Double>, Map<S
             // is 1 tileSize away from the left(upper) side.
         } else {
             if (isLon) {
-                rasteredParam = rootUL + (rasteredParamNum + 1) * tileSize;
+                rasterParam = rootUL + (rasteredGridNum + 1) * tileSize;
             } else {
-                rasteredParam = rootUL - (rasteredParamNum + 1) * tileSize;
+                rasterParam = rootUL - (rasteredGridNum + 1) * tileSize;
             }
         }
 
-        return rasteredParam;
+        return rasterParam;
+    }
+
+    private Map<String, Object> queryFail() {
+        Map<String, Object> results = new HashMap<>(8);
+        results.put("render_grid", null);
+        results.put("raster_ul_lon", 0);
+        results.put("raster_ul_lat", 0);
+        results.put("raster_lr_lon", 0);
+        results.put("raster_lr_lat", 0);
+        results.put("depth", 0);
+        results.put("query_success", false);
+        return results;
     }
 
     @Override
@@ -253,18 +256,6 @@ public class RasterAPIHandler extends APIRouteHandler<Map<String, Double>, Map<S
             result.put("b64_encoded_image_data", encodedImage);
         }
         return super.buildJsonResponse(result);
-    }
-
-    private Map<String, Object> queryFail() {
-        Map<String, Object> results = new HashMap<>();
-        results.put("render_grid", null);
-        results.put("raster_ul_lon", 0);
-        results.put("raster_ul_lat", 0);
-        results.put("raster_lr_lon", 0);
-        results.put("raster_lr_lat", 0);
-        results.put("depth", 0);
-        results.put("query_success", false);
-        return results;
     }
 
     /**
@@ -281,12 +272,12 @@ public class RasterAPIHandler extends APIRouteHandler<Map<String, Double>, Map<S
         }
         if (rip.containsKey("query_success")) {
             boolean success = (boolean) rip.get("query_success");
-            if (!success) {
-                System.out.println("query_success was reported as a failure");
-                return false;
+            if (success) {
+                return true;
             }
         }
-        return true;
+        System.out.println("query_success was reported as a failure");
+        return false;
     }
 
     /**
@@ -350,13 +341,11 @@ public class RasterAPIHandler extends APIRouteHandler<Map<String, Double>, Map<S
 
     private BufferedImage getImage(String imgPath) {
         BufferedImage tileImg = null;
-        if (tileImg == null) {
-            try {
-                File in = new File(imgPath);
-                tileImg = ImageIO.read(in);
-            } catch (IOException | NullPointerException e) {
-                e.printStackTrace();
-            }
+        try {
+            File in = new File(imgPath);
+            tileImg = ImageIO.read(in);
+        } catch (IOException | NullPointerException e) {
+            e.printStackTrace();
         }
         return tileImg;
     }

@@ -14,16 +14,17 @@ import java.util.List;
 public class Constants {
 
     /**
-     * The root upper left/lower right longitudes and latitudes represent the bounding box of
-     * the root tile, as the images in the img/ folder are scraped.
+     * The root upper left/lower right longitudes and latitudes represent the
+     * bounding box of the root tile, as the images in the img/ folder are scraped.
      * Longitude == x-axis; latitude == y-axis.
      */
     public static final double ROOT_ULLAT = 37.892195547244356, ROOT_ULLON = -122.2998046875,
             ROOT_LRLAT = 37.82280243352756, ROOT_LRLON = -122.2119140625;
 
     /**
-     * The OSM XML file path. Downloaded from <a href="http://download.bbbike.org/osm/">here</a>
-     * using custom region selection.
+     * The OSM XML file path. Downloaded from
+     * <a href="http://download.bbbike.org/osm/">here</a> using custom region
+     * selection.
      **/
     public static final String OSM_DB_PATH = "../library-sp19/data/proj2c_xml/berkeley-2019.osm.xml";
 
@@ -42,8 +43,9 @@ public class Constants {
     public static AugmentedStreetMapGraph SEMANTIC_STREET_GRAPH;
 
     /**
-     * This is used to maintain a single List of route so that the same instance(object) is accessed
-     * from everywhere in the code. Enum is a cleaner way to achieve such a singleton pattern.
+     * This is used to maintain a single List of route so that the same
+     * instance(object) is accessed from everywhere in the code. Enum is a cleaner
+     * way to achieve such a singleton pattern.
      */
     public static final List<Long> ROUTE_LIST = new LinkedList<>();
 }

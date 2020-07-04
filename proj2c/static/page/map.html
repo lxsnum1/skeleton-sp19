@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/themes/smoothness/jquery-ui.css">
@@ -11,6 +12,7 @@
   <link rel="stylesheet" href="styles/map.css">
   <title>BearMaps</title>
 </head>
+
 <body>
   <div class="map-container">
     <div id="mapbody"><img id="map"></div>
@@ -43,7 +45,8 @@
               <div class="settings-title"><strong>Options</strong></div>
               <form class="options" action="">
                 <label class="options-label">
-                  <input id="constrain-input" type="checkbox" name="constrain"><span>Constrain map dimensions (this may solve problems with zooming out)</span>
+                  <input id="constrain-input" type="checkbox" name="constrain"><span>Constrain map dimensions (this may
+                    solve problems with zooming out)</span>
                 </label><br>
                 <div class="settings-title"><strong>Theme:</strong></div>
                 <label class="options-label">
@@ -67,25 +70,25 @@
     <div>
       <a class="clear waves-effect btn">clear route</a>
       <div class="status">
-          <div id="status-route" class="card">
-            <div class="card-content">
-              Double-click again <br> for route endpoint ...
-            </div>
+        <div id="status-route" class="card">
+          <div class="card-content">
+            Double-click again <br> for route endpoint ...
           </div>
-          <div id="status-loading" class="card">
-            <div class="card-content">
-              <div class="loader-text">Rastering</div>
-              <div class="loader">Loading...</div>
-            </div>
+        </div>
+        <div id="status-loading" class="card">
+          <div class="card-content">
+            <div class="loader-text">Rastering</div>
+            <div class="loader">Loading...</div>
           </div>
-          <div id="status-error" class="card">
-            <div class="card-content">
-              Got server-side error! <br> See Java Console
-            </div>
+        </div>
+        <div id="status-error" class="card">
+          <div class="card-content">
+            Got server-side error! <br> See Java Console
           </div>
         </div>
       </div>
     </div>
+  </div>
   </div>
   <div class="directions">
     <div class="card">
@@ -103,4 +106,5 @@
   </div>
   <script src="scripts/map.js"></script>
 </body>
+
 </html>
