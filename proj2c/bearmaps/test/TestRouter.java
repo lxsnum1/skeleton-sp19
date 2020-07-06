@@ -42,8 +42,7 @@ public class TestRouter {
         for (int i = 0; i < NUM_TESTS; i++) {
             System.out.println(String.format("Running test: %d", i));
             Map<String, Double> params = testParams.get(i);
-            List<Long> actual = Router.shortestPath(graph,
-                    params.get("start_lon"), params.get("start_lat"),
+            List<Long> actual = Router.shortestPath(graph, params.get("start_lon"), params.get("start_lat"),
                     params.get("end_lon"), params.get("end_lat"));
             List<Long> expected = expectedResults.get(i);
             assertEquals("Your results did not match the expected results", expected, actual);
@@ -53,7 +52,7 @@ public class TestRouter {
     private List<Map<String, Double>> paramsFromFile() throws Exception {
         List<String> lines = Files.readAllLines(Paths.get(PARAMS_FILE), Charset.defaultCharset());
         List<Map<String, Double>> testParams = new ArrayList<>();
-        int lineIdx = 2; // ignore comment lines
+        int lineIdx = 2;
         for (int i = 0; i < NUM_TESTS; i++) {
             Map<String, Double> params = new HashMap<>();
             params.put("start_lon", Double.parseDouble(lines.get(lineIdx)));
@@ -69,7 +68,7 @@ public class TestRouter {
     private List<List<Long>> resultsFromFile() throws Exception {
         List<String> lines = Files.readAllLines(Paths.get(RESULTS_FILE), Charset.defaultCharset());
         List<List<Long>> expected = new ArrayList<>();
-        int lineIdx = 2; // ignore comment lines
+        int lineIdx = 2;
         for (int i = 0; i < NUM_TESTS; i++) {
             int numVertices = Integer.parseInt(lines.get(lineIdx));
             lineIdx++;

@@ -101,6 +101,7 @@ public class Router {
             this.distance = 0.0;
         }
 
+        @Override
         public String toString() {
             return String.format("%s on %s and continue for %.3f miles.", DIRECTIONS[direction], way, distance);
         }
