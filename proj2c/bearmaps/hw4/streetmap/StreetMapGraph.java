@@ -26,8 +26,7 @@ public class StreetMapGraph implements AStarGraph<Long> {
     }
 
     /**
-     * Returns a list of outgoing edges for V. Assumes V exists in this
-     * graph.
+     * Returns a list of outgoing edges for V. Assumes V exists in this graph.
      **/
     @Override
     public List<WeightedEdge<Long>> neighbors(Long v) {
@@ -41,8 +40,8 @@ public class StreetMapGraph implements AStarGraph<Long> {
     }
 
     /**
-     * Returns the great-circle distance between S and GOAL. Assumes
-     * S and GOAL exist in this graph.
+     * Returns the great-circle distance between S and GOAL. Assumes S and GOAL
+     * exist in this graph.
      */
     @Override
     public double estimatedDistanceToGoal(Long s, Long goal) {
@@ -52,8 +51,7 @@ public class StreetMapGraph implements AStarGraph<Long> {
     }
 
     /**
-     * Returns a set of my vertices. Altering this set does not alter this
-     * graph.
+     * Returns a set of my vertices. Altering this set does not alter this graph.
      **/
     private Set<Long> vertices() {
         Set<Long> vertices = new HashSet<>();
@@ -65,8 +63,8 @@ public class StreetMapGraph implements AStarGraph<Long> {
     }
 
     /**
-     * Factory method. Creates and returns a graph from an OSM XML
-     * file. Assumes file is correctly formatted.
+     * Factory method. Creates and returns a graph from an OSM XML file. Assumes
+     * file is correctly formatted.
      */
     private static StreetMapGraph readFromXML(String filename) {
         StreetMapGraph smg = new StreetMapGraph();
@@ -93,8 +91,9 @@ public class StreetMapGraph implements AStarGraph<Long> {
         }
     }
 
-    /** Adds an edge to this graph, if FROMID and TOID are in this graph. Does
-     *  not add additional edge if edge already exists.
+    /**
+     * Adds an edge to this graph, if FROMID and TOID are in this graph. Does not
+     * add additional edge if edge already exists.
      **/
     void addWeightedEdge(long fromID, long toID, String name) {
         if (nodes.containsKey(fromID) && nodes.containsKey(toID)) {
@@ -110,8 +109,8 @@ public class StreetMapGraph implements AStarGraph<Long> {
     }
 
     /**
-     * Removes vertices with 0 out-degree from graph. Note that this will
-     * cause issues if edges are not bidirectional.
+     * Removes vertices with 0 out-degree from graph. Note that this will cause
+     * issues if edges are not bidirectional.
      **/
     private void clean() {
         List<Long> toRemove = new ArrayList<>();
@@ -177,7 +176,8 @@ public class StreetMapGraph implements AStarGraph<Long> {
      * Returns the great-circle (haversine) distance between geographic coordinates
      * (LATV, LONV) and (LATW, LONW).
      *
-     * @source Kevin Lowe & Antares Chen, and https://www.movable-type.co.uk/scripts/latlong.html
+     * @source Kevin Lowe & Antares Chen, and
+     *         https://www.movable-type.co.uk/scripts/latlong.html
      **/
     private double distance(double lonV, double lonW, double latV, double latW) {
         double phi1 = Math.toRadians(latV);
@@ -188,11 +188,13 @@ public class StreetMapGraph implements AStarGraph<Long> {
         double a = Math.sin(dphi / 2.0) * Math.sin(dphi / 2.0);
         a += Math.cos(phi1) * Math.cos(phi2) * Math.sin(dlambda / 2.0) * Math.sin(dlambda / 2.0);
         double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+        // earth radius: 3963 miles, 6371 km
         return 3963 * c;
     }
 
     /**
      * Gets the longitude of a vertex.
+     *
      * @param v The id of the vertex.
      * @return The longitude of the vertex.
      */
@@ -205,6 +207,7 @@ public class StreetMapGraph implements AStarGraph<Long> {
 
     /**
      * Gets the latitude of a vertex.
+     *
      * @param v The id of the vertex.
      * @return The latitude of the vertex.
      */
@@ -217,6 +220,7 @@ public class StreetMapGraph implements AStarGraph<Long> {
 
     /**
      * Gets the name of a vertex (if applicable).
+     *
      * @param v The id of the vertex.
      * @return The name of the vertex.
      */
@@ -229,7 +233,7 @@ public class StreetMapGraph implements AStarGraph<Long> {
 
     protected List<Node> getNodes() {
         List<Node> nodes = new ArrayList<>();
-        for(Map.Entry<Long, Node> nodeEntry: this.nodes.entrySet()){
+        for (Map.Entry<Long, Node> nodeEntry : this.nodes.entrySet()) {
             nodes.add(nodeEntry.getValue());
         }
         return nodes;

@@ -5,8 +5,11 @@ import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import bearmaps.hw4.AStarSolver;
+
 /**
  * This class acts as a helper for the RoutingAPIHandler.
+ *
  * @author Josh Hug, ______
  */
 public class Router {
@@ -15,28 +18,29 @@ public class Router {
      * Overloaded method for shortestPath that has flexibility to specify a solver
      * and returns a List of longs representing the shortest path from the node
      * closest to a start location and the node closest to the destination location.
-     * @param g The graph to use.
-     * @param stlon The longitude of the start location.
-     * @param stlat The latitude of the start location.
+     *
+     * @param g       The graph to use.
+     * @param stlon   The longitude of the start location.
+     * @param stlat   The latitude of the start location.
      * @param destlon The longitude of the destination location.
      * @param destlat The latitude of the destination location.
      * @return A list of node id's in the order visited on the shortest path.
      */
-    public static List<Long> shortestPath(AugmentedStreetMapGraph g, double stlon, double stlat,
-                                          double destlon, double destlat) {
-        //long src = g.closest(stlon, stlat);
-        //long dest = g.closest(destlon, destlat);
-        //return new WeirdSolver<>(g, src, dest, 20).solution();
-        return null;
+    public static List<Long> shortestPath(AugmentedStreetMapGraph g, double stlon, double stlat, double destlon,
+            double destlat) {
+        long src = g.closest(stlon, stlat);
+        long dest = g.closest(destlon, destlat);
+        return new AStarSolver<>(g, src, dest, 20).solution();
     }
 
     /**
      * Create the list of directions corresponding to a route on the graph.
-     * @param g The graph to use.
-     * @param route The route to translate into directions. Each element
-     *              corresponds to a node from the graph in the route.
-     * @return A list of NavigatiionDirection objects corresponding to the input
-     * route.
+     *
+     * @param g     The graph to use.
+     * @param route The route to translate into directions. Each element corresponds
+     *              to a node from the graph in the route.
+     * @return A list of NavigationDirection objects corresponding to the input
+     *         route.
      */
     public static List<NavigationDirection> routeDirections(AugmentedStreetMapGraph g, List<Long> route) {
         /* fill in for part IV */
@@ -44,9 +48,9 @@ public class Router {
     }
 
     /**
-     * Class to represent a navigation direction, which consists of 3 attributes:
-     * a direction to go, a way, and the distance to travel for. This is only
-     * useful for Part IV of the project.
+     * Class to represent a navigation direction, which consists of 3 attributes: a
+     * direction to go, a way, and the distance to travel for. This is only useful
+     * for Part IV of the project.
      */
     public static class NavigationDirection {
 
@@ -63,7 +67,7 @@ public class Router {
         /** Number of directions supported. */
         public static final int NUM_DIRECTIONS = 8;
 
-        /** A mapping of integer values to directions.*/
+        /** A mapping of integer values to directions. */
         public static final String[] DIRECTIONS = new String[NUM_DIRECTIONS];
 
         /** Default name for an unknown way. */
@@ -81,7 +85,7 @@ public class Router {
             DIRECTIONS[SHARP_RIGHT] = "Sharp right";
         }
 
-        /** The direction a given NavigationDirection represents.*/
+        /** The direction a given NavigationDirection represents. */
         int direction;
         /** The name of the way I represent. */
         String way;
@@ -98,13 +102,13 @@ public class Router {
         }
 
         public String toString() {
-            return String.format("%s on %s and continue for %.3f miles.",
-                    DIRECTIONS[direction], way, distance);
+            return String.format("%s on %s and continue for %.3f miles.", DIRECTIONS[direction], way, distance);
         }
 
         /**
-         * Takes the string representation of a navigation direction and converts it into
-         * a Navigation Direction object.
+         * Takes the string representation of a navigation direction and converts it
+         * into a Navigation Direction object.
+         *
          * @param dirAsString The string representation of the NavigationDirection.
          * @return A NavigationDirection object representing the input string.
          */
@@ -148,16 +152,18 @@ public class Router {
             }
         }
 
-        /** Checks that a value is between the given ranges.*/
+        /** Checks that a value is between the given ranges. */
         private static boolean numInRange(double value, double from, double to) {
             return value >= from && value <= to;
         }
 
         /**
-         * Calculates what direction we are going based on the two bearings, which
-         * are the angles from true north. We compare the angles to see whether
-         * we are making a left turn or right turn. Then we can just use the absolute value of the
-         * difference to give us the degree of turn (straight, sharp, left, or right).
+         * Calculates what direction we are going based on the two bearings, which are
+         * the angles from true north. We compare the angles to see whether we are
+         * making a left turn or right turn. Then we can just use the absolute value of
+         * the difference to give us the degree of turn (straight, sharp, left, or
+         * right).
+         *
          * @param prevBearing A double in [0, 360.0]
          * @param currBearing A double in [0, 360.0]
          * @return the Navigation Direction type
@@ -168,8 +174,7 @@ public class Router {
                 return NavigationDirection.STRAIGHT;
 
             }
-            if ((currBearing > prevBearing && absDiff < 180.0)
-                    || (currBearing < prevBearing && absDiff > 180.0)) {
+            if ((currBearing > prevBearing && absDiff < 180.0) || (currBearing < prevBearing && absDiff > 180.0)) {
                 // we're going right
                 if (numInRange(absDiff, 15.0, 30.0) || absDiff > 330.0) {
                     // bearmaps.proj2c.example of high abs diff is prev = 355 and curr = 2
@@ -191,13 +196,11 @@ public class Router {
             }
         }
 
-
         @Override
         public boolean equals(Object o) {
             if (o instanceof NavigationDirection) {
-                return direction == ((NavigationDirection) o).direction
-                    && way.equals(((NavigationDirection) o).way)
-                    && distance == ((NavigationDirection) o).distance;
+                return direction == ((NavigationDirection) o).direction && way.equals(((NavigationDirection) o).way)
+                        && distance == ((NavigationDirection) o).distance;
             }
             return false;
         }
@@ -208,16 +211,16 @@ public class Router {
         }
 
         /**
-         * Returns the initial bearing (angle) between vertices v and w in degrees.
-         * The initial bearing is the angle that, if followed in a straight line
-         * along a great-circle arc from the starting point, would take you to the
-         * end point.
+         * Returns the initial bearing (angle) between vertices v and w in degrees. The
+         * initial bearing is the angle that, if followed in a straight line along a
+         * great-circle arc from the starting point, would take you to the end point.
          * Assumes the lon/lat methods are implemented properly.
          * <a href="https://www.movable-type.co.uk/scripts/latlong.html">Source</a>.
-         * @param lonV  The longitude of the first vertex.
-         * @param latV  The latitude of the first vertex.
-         * @param lonW  The longitude of the second vertex.
-         * @param latW  The latitude of the second vertex.
+         *
+         * @param lonV The longitude of the first vertex.
+         * @param latV The latitude of the first vertex.
+         * @param lonW The longitude of the second vertex.
+         * @param latW The latitude of the second vertex.
          * @return The initial bearing between the vertices.
          */
         public static double bearing(double lonV, double lonW, double latV, double latW) {
